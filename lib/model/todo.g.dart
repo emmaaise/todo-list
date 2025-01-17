@@ -1,11 +1,4 @@
-// GENERATED CODE - DO NOT MODIFY BY HAND
-
 part of 'todo.dart';
-
-// **************************************************************************
-// TypeAdapterGenerator
-// **************************************************************************
-
 class TodoAdapter extends TypeAdapter<Todo> {
   @override
   final int typeId = 0;
