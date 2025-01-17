@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:intl/intl.dart'; // Importing intl package for date formatting
 import 'model/todo.dart';
-
 void main() async {
   await Hive.initFlutter();
   Hive.registerAdapter(TodoAdapter());
@@ -17,7 +17,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Todo List',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+
         useMaterial3: true,
       ),
       home: const MyHomePage(title: 'Todo List'),
@@ -60,6 +61,11 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
+  void _deleteTodo(int index) {
+    _todoBox.deleteAt(index);
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -91,14 +97,24 @@ class _MyHomePageState extends State<MyHomePage> {
                     final todo = box.getAt(index);
                     return ListTile(
                       title: Text(todo!.title),
-                      trailing: Checkbox(
-                        value: todo.isDone,
-                        onChanged: (bool? value) {
-                          setState(() {
-                            todo.toggleDone();
-                            box.putAt(index, todo);
-                          });
-                        },
+                      subtitle: Text(DateFormat('yyyy-MM-dd – kk:mm').format(todo.createdAt)), // Formatting the createdAt date
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Checkbox(
+                            value: todo.isDone,
+                            onChanged: (bool? value) {
+                              setState(() {
+                                todo.toggleDone();
+                                box.putAt(index, todo);
+                              });
+                            },
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.delete),
+                            onPressed: () => _deleteTodo(index),
+                          ),
+                        ],
                       ),
                     );
                   },
